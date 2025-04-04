@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  email String @unique
+}
+
+model Screener {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name String @unique
+  screenerJson String
+  questions Question[]
+  responses ScreenerResponse[] // TODO: do we ever need to get all responses for a screener?
+}
+
+model Question {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  domain Domain @relation(fields: [domainId], references: [id])
+  domainId String
+  screener Screener @relation(fields: [screenerId], references: [id])
+  screenerId String
+}
+
+model ScreenerResponse {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  screener Screener @relation(fields: [screenerId], references: [id])
+  screenerId String
+  answers Answer[]
+}
+
+model Answer {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  questionId String
+  value Int
+  screenerResponse ScreenerResponse @relation(fields: [screenerResponseId], references: [id])
+  screenerResponseId String
+}
+
+model Domain {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name String
+  scoringThreshold Int
+  scoringOperator String
+  level2Assessment String
+  questions Question[]
+}
