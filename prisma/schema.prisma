@@ -6,7 +6,8 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  // engineType = "library"
+  // previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -25,8 +26,8 @@ model Screener {
   id String @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  name String @unique
-  screenerJson String
+  name String @unique // unique because we will use the name in routing on the FE
+  screenerJson Json
   questions Question[]
   responses ScreenerResponse[] // TODO: do we ever need to get all responses for a screener?
 }

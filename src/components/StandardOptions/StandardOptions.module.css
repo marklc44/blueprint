@@ -1,0 +1,6 @@
+.container {
+  @apply overflow-hidden;
+}
+.option {
+  @apply block;
+}
