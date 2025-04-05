@@ -1,29 +1,42 @@
 import { getAllScreeners, getScreenerByName } from "@/api/screener"
 import Form from "@/components/Form"
 import { ScreenerJson } from "@/types/screener"
-import { Prisma } from "@prisma/client"
+import Link from "next/link"
 
 export const revalidate = 60 // 86400 // daily
 export const dynamicParams = true
 
 export async function generateStaticParams() {
   const pages = await getAllScreeners()
-  const params = pages.map((page) => {
-    const { name } = page
-    return {
-      name: name.toLowerCase(),
+  const params = pages.reduce((acc, curr) => {
+    const { name } = curr
+    const screenerJson = curr.screenerJson
+    if (!screenerJson) {
+      return
     }
-  })
+    if (screenerJson) {
+      const screener: ScreenerJson = screenerJson
+      const sections = screener.content.sections.map((_, idx) => {
+        return {
+          name,
+          section: idx.toString(),
+        }
+      })
+      return acc.concat(sections)
+    }
+    
+  }, [])
   
   return params
 }
 
 export interface PageName {
   name: string
+  section: string
 }
 
 export default async function AssessmentPage({ params }: { params: PageName }) {
-  const { name } = await params
+  const { name, section } = await params
   const page = await getScreenerByName(name)
   const screenerJson = page?.screenerJson as ScreenerJson
   const { name: screenerName, disorder, full_name, content } = screenerJson
@@ -31,7 +44,11 @@ export default async function AssessmentPage({ params }: { params: PageName }) {
 
   // TODO: handle multiple possible sections
   // move through screener sections with a different transition than questions
-  const section1 = content?.sections?.[0]
+  const sectionNum = parseInt(section)
+  console.log('sectionNum: ', sectionNum)
+  console.log('content: ', content.sections[sectionNum - 1])
+  const contentSection = content?.sections?.[sectionNum - 1]
+  
   
   return <div>
     <section className={'screener-meta'}>
@@ -43,14 +60,16 @@ export default async function AssessmentPage({ params }: { params: PageName }) {
     </section>
     <section className={'screener-section'}>
       <section className={'instructions'}>
-        <h2>Ask the patient: {section1?.title}</h2>
+        <h2>Ask the patient: {contentSection?.title}</h2>
       </section>
-      <Form questions={section1.questions} answers={section1.answers} />
-      {/**
-       * TODO: for multiple possible content sections, consider adding Next Section (section title)
-       * Next Section would link to another the next content section in the screener
-       * If so, add the section # to routing
-       */}
+      <Form questions={contentSection.questions} answers={contentSection.answers} />
+      <section className={'page-footer'}>
+        {content.sections.length > sectionNum && (
+          <Link className={'inline-block'}href={`/assessments/${name}/sections/${sectionNum + 1}`}>
+            Next section &#12299;
+          </Link>
+        )}
+      </section>
     </section>
     
 

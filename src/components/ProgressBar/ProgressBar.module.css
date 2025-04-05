@@ -2,8 +2,8 @@
   @apply overflow-hidden;
 }
 .outer {
-  @apply overflow-hidden border border-slate-500 rounded p-2;
+  @apply overflow-hidden;
 }
 .innder {
-  @apply bg-blue rounded transition;
+  @apply overflow-hidden;
 }
