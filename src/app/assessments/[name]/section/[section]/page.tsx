@@ -42,38 +42,37 @@ export default async function AssessmentPage({ params }: { params: PageName }) {
   const { name: screenerName, disorder, full_name, content } = screenerJson
   console.log('content: ', content)
 
-  // TODO: handle multiple possible sections
-  // move through screener sections with a different transition than questions
   const sectionNum = parseInt(section)
   console.log('sectionNum: ', sectionNum)
   console.log('content: ', content.sections[sectionNum - 1])
   const contentSection = content?.sections?.[sectionNum - 1]
   
-  
-  return <div>
-    <section className={'screener-meta'}>
-      <h1>{screenerName}</h1>
-      <div className={'header'}>
-        <p>Full Name: {full_name}</p>
-        <p>Disorder: {disorder}</p>
-      </div>
-    </section>
-    <section className={'screener-section'}>
-      <section className={'instructions'}>
-        <h2>Ask the patient: {contentSection?.title}</h2>
+  return (
+    <article>
+      <section className={'screener-meta row bg-slate-100'}>
+        <div className={'row-inner'}>
+          <h1>{screenerName}</h1>
+          <div className={'header'}>
+            <p>Full Name: {full_name}</p>
+            <p>Disorder: {disorder}</p>
+          </div>
+        </div>
       </section>
-      <Form questions={contentSection.questions} answers={contentSection.answers} />
-      <section className={'page-footer'}>
-        {content.sections.length > sectionNum && (
-          <Link className={'inline-block'}href={`/assessments/${name}/sections/${sectionNum + 1}`}>
-            Next section &#12299;
-          </Link>
-        )}
+      <section className={'screener-section row'}>
+        <div className={'row-inner'}>
+          <section className={'instructions'}>
+            <h2>Ask the patient: {contentSection?.title}</h2>
+          </section>
+          <Form questions={contentSection.questions} answers={contentSection.answers} />
+          <section className={'page-footer'}>
+            {content.sections.length > sectionNum && (
+              <Link className={'inline-block'}href={`/assessments/${name}/sections/${sectionNum + 1}`}>
+                Next section &#12299;
+              </Link>
+            )}
+          </section>
+        </div>
       </section>
-    </section>
-    
-
-    
-
-  </div>
+    </article>
+  )
 }

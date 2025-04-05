@@ -24,3 +24,10 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.row {
+  @apply w-full flex flex-row justify-center;
+}
+.row-inner {
+  @apply w-full basis-full max-w-[1600px] text-left;
+}
