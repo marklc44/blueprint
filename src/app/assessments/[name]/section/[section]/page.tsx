@@ -1,7 +1,9 @@
 import { getAllScreeners, getScreenerByName } from "@/api/screener"
+import { getScreenerPage } from "@/actions"
 import Form from "@/components/Form"
 import { ScreenerJson } from "@/types/screener"
 import Link from "next/link"
+import { notFound } from 'next/navigation'
 
 export const revalidate = 60 // 86400 // daily
 export const dynamicParams = true
@@ -37,9 +39,12 @@ export interface PageName {
 
 export default async function AssessmentPage({ params }: { params: PageName }) {
   const { name, section } = await params
-  const page = await getScreenerByName(name.toUpperCase())
-  const { name: screenerName, disorder, fullName, content } = page
+  const page = await getScreenerPage(name.toUpperCase())
 
+  if (!page) {
+    return notFound()
+  }
+  const { name: screenerName, disorder, fullName, content } = page
   const sectionNum = parseInt(section)
   const contentSection = content?.sections?.[sectionNum - 1]
   

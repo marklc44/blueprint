@@ -1,16 +1,13 @@
 import { storeScreenerResponse, getDomains } from "@/api/response"
 import { getScreenerByName } from "@/api/screener"
 import { calculateAssessments } from "@/utils/results"
+import { transformScreener } from "@/utils/transformScreener"
 
-export const getAllScreeners = () => {
+export const getScreenerPage = async (name: string) => {
+  const screener = await getScreenerByName(name)
 
+  return transformScreener(screener)
 }
-
-export const fetchScreener = async (name: string) => {
-  return await getScreenerByName(name)
-}
-
-
 
 export const submitScreenerResponse = async (response: ScreenerResponse) => {
   await storeScreenerResponse(response)

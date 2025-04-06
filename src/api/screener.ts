@@ -12,8 +12,7 @@ export const getAllScreeners = async () => {
 // this could be more generalized to pass in more query where params
 export const getScreenerByName = async (name: string) => {
   // Screener includes related questions with domain mapping
-  console.log('name: ', name)
-  const screener = await prisma.screener.findUnique({
+  return await prisma.screener.findUnique({
     where: { name },
     include: {
       screenerSections: {
@@ -23,20 +22,5 @@ export const getScreenerByName = async (name: string) => {
       },
     },
   })
-  console.log('screener: ', screener)
-  // build screenerJson from response
-  const { id, name: screenerName, disorder, fullName, displayName } = screener
-  const formattedScreener = {
-    id,
-    name: screenerName,
-    disorder,
-    fullName,
-    content: {
-      displayName,
-      sections: screener?.screenerSections,
-    },
-  }
-  console.log('formattedScreener: ', formattedScreener)
-  return formattedScreener
 }
 
