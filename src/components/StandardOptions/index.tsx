@@ -1,3 +1,4 @@
+'use client'
 import { Section } from "@/types/screener"
 import styles from './StandardOptions.module.css'
 
