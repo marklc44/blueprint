@@ -4,8 +4,8 @@
   @apply overflow-hidden w-full;
 }
 .outer {
-  @apply overflow-hidden w-full;
+  @apply w-full p-1 h-[20px] border border-medium-gray rounded-xl;
 }
 .inner {
-  @apply overflow-hidden border-blue;
+  @apply h-full bg-blue rounded-xl transition-all duration-500;
 }

@@ -1,21 +1,34 @@
 'use client'
+import type { Section, ScreenerQuestion } from "@/types/screener"
 import StandardOptions from "../StandardOptions"
 import styles from './Question.module.css'
 
 export interface QuestionProps {
-  question: any
-  type: string
-  answers: any
-  handleAnswer: (id: string, value: number) => void
+  index: number
+  question: ScreenerQuestion
+  type: Section['type']
+  answers: Section['answers']
+  handleAnswer: (id: string, value: number, idx: number) => void
+  handlePrev: () => void
 }
 
-const StandardQuestion = ({ question, type, answers, handleAnswer }: QuestionProps) => {
+const Question = ({ index, question, type, answers, handleAnswer }: QuestionProps) => {
+
   return (
     <section className={styles['container']}>
-      <h3>{question.title}</h3>
-      <StandardOptions answers={answers} handleClick={handleAnswer} />
+      <h3 className={styles['title']}>{question.title}</h3>
+      <input type="hidden" name={question.question_id} />
+      {/** TODO: handle other answer types */}
+      {type === 'standard' && (
+        <StandardOptions
+          answers={answers}
+          handleClick={(value) => {
+            handleAnswer(question.question_id, value, index)
+          }}
+        />
+      )}
     </section>
   )
 }
 
-export default StandardQuestion
+export default Question

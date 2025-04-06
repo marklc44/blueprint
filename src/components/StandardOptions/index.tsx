@@ -3,7 +3,7 @@ import styles from './StandardOptions.module.css'
 
 export interface OptionsProps {
   answers: Section['answers']
-  handleClick: (id: string) => void
+  handleClick: (value: number) => void
 }
 
 export const StandardOptions = ({ answers, handleClick }: OptionsProps) => {
@@ -11,7 +11,11 @@ export const StandardOptions = ({ answers, handleClick }: OptionsProps) => {
     <ul className={styles['container']}>
       {answers?.map((item) => {
         return (
-          <li key={`answer-${item.title}`} className={styles['option']}>
+          <li
+            key={`answer-${item.title}`}
+            className={styles['option']}
+            onClick={() => handleClick(item.value)}
+          >
             <p>{item.value}: {item.title}</p>
           </li>
         )

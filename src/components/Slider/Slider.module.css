@@ -1,0 +1,8 @@
+@reference "../../app/globals.css";
+
+.slider {
+  @apply overflow-hidden flex flex-row flex-nowrap transition-all duration-500;
+}
+.slide {
+  @apply w-full basis-full;
+}

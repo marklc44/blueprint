@@ -1,8 +1,11 @@
 @reference "../../app/globals.css";
 
 .container {
-  @apply bg-pale-gray;
+  @apply overflow-hidden;
+}
+.form-meta {
+  @apply overflow-hidden mb-4;
 }
 .form {
-  @apply overflow-hidden w-full bg-pale-gray;
+  @apply overflow-hidden w-full;
 }

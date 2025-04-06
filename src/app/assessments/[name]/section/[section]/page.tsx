@@ -61,9 +61,9 @@ export default async function AssessmentPage({ params }: { params: PageName }) {
       <section className={'screener-section row'}>
         <div className={'row-inner'}>
           <section className={'instructions'}>
-            <h2><span className="font-bold">Ask the patient: </span>{contentSection?.title}</h2>
+            <h2 className={'text-2xl mb-4'}><span className="font-bold">Ask the patient: </span>{contentSection?.title}</h2>
           </section>
-          <Form questions={contentSection.questions} answers={contentSection.answers} />
+          <Form type={contentSection.type} displayName={content.display_name} questions={contentSection.questions} answers={contentSection.answers} />
           <section className={'page-footer'}>
             {content.sections.length > sectionNum && (
               <Link className={'inline-block'}href={`/assessments/${name}/sections/${sectionNum + 1}`}>

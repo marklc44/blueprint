@@ -4,5 +4,5 @@
   @apply overflow-hidden;
 }
 .option {
-  @apply block;
+  @apply block rounded-xl bg-blue text-white p-4 mb-2 hover:bg-pale-blue hover:text-blue transition;
 }

@@ -3,3 +3,6 @@
 .container {
   @apply overflow-hidden;
 }
+.title {
+  @apply text-xl mb-4 ;
+}
