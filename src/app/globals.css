@@ -3,11 +3,29 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --white: white;
+  --black: #282828;
+  --blue: #2d54e8;
+  --light-blue: #eaeefd;
+  --medium-gray: #a1a1a1;
+  --dark-gray: #757575;
+  --pale-gray: #e4e5e6;
+  --pale-blue: #f5f5f7;
+  --background: white;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-blue: var(--blue);
+  --color-black: var(--black);
+  --color-light-blue: var(--light-blue);
+  --color-medium-gray: var(--medium-gray);
+  --color-dark-gray: var(--dark-gray);
+  --color-medium-gray: var(--medium-gray);
+  --color-pale-gray: var(--pale-gray);
+  --color-pale-blue: var(--pale-blue);
+  --color-background: var(--background);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -23,6 +41,16 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.h1 {
+  @apply text-4xl;
+}
+.h2 {
+  @apply text-3xl;
+}
+.h3 {
+  @apply text-2xl;
 }
 
 .row {

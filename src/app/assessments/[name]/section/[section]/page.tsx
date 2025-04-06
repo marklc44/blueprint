@@ -49,7 +49,7 @@ export default async function AssessmentPage({ params }: { params: PageName }) {
   
   return (
     <article>
-      <section className={'screener-meta row bg-slate-100'}>
+      <section className={'screener-meta row bg-pale-gray'}>
         <div className={'row-inner'}>
           <h1>{screenerName}</h1>
           <div className={'header'}>
@@ -61,7 +61,7 @@ export default async function AssessmentPage({ params }: { params: PageName }) {
       <section className={'screener-section row'}>
         <div className={'row-inner'}>
           <section className={'instructions'}>
-            <h2>Ask the patient: {contentSection?.title}</h2>
+            <h2><span className="font-bold">Ask the patient: </span>{contentSection?.title}</h2>
           </section>
           <Form questions={contentSection.questions} answers={contentSection.answers} />
           <section className={'page-footer'}>

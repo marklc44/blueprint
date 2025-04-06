@@ -1,9 +1,11 @@
+@reference "../../app/globals.css";
+
 .container {
-  @apply overflow-hidden;
+  @apply overflow-hidden w-full;
 }
 .outer {
-  @apply overflow-hidden;
+  @apply overflow-hidden w-full;
 }
-.innder {
-  @apply overflow-hidden;
+.inner {
+  @apply overflow-hidden border-blue;
 }
