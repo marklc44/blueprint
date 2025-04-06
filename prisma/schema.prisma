@@ -16,58 +16,81 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  email String @unique
+  email     String   @unique
 }
 
 model Screener {
-  id String @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name String @unique // unique because we will use the name in routing on the FE
-  screenerJson Json
-  questions Question[]
-  responses ScreenerResponse[] // TODO: do we ever need to get all responses for a screener?
+  id                String          @id @default(uuid())
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  name              String          @unique // unique because we will use the name in routing on the FE
+  disorder          String
+  fullName          String
+  displayName       String
+  screenerSections   ScreenerSection[]
+}
+
+model ScreenerSection {
+  id            String             @id @default(uuid())
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  type          String
+  title         String
+  answers       Json
+  questions     QuestionsOnScreenerSections[]
+  responses     ScreenerResponse[] // TODO: do we ever need to get all responses for a screenerSection?
+  Screener      Screener @relation(fields: [screenerId], references: [id], onDelete: Cascade)
+  screenerId    String
 }
 
 model Question {
-  id String @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  domain Domain @relation(fields: [domainId], references: [id])
-  domainId String
-  screener Screener @relation(fields: [screenerId], references: [id])
-  screenerId String
+  id                String          @id @default(uuid())
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  title             String
+  domain            Domain          @relation(fields: [domainId], references: [id])
+  domainId          String
+  screenerSections  QuestionsOnScreenerSections[]
+}
+
+model QuestionsOnScreenerSections {
+  id                String          @id @default(uuid())
+  assignedAt        DateTime        @default(now())
+  question          Question        @relation(fields: [questionId], references: [id])
+  questionId        String
+  screenerSection   ScreenerSection @relation(fields: [screenerSectionId], references: [id])
+  screenerSectionId String
 }
 
 model ScreenerResponse {
-  id String @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  screener Screener @relation(fields: [screenerId], references: [id])
-  screenerId String
-  answers Answer[]
+  id                String          @id @default(uuid())
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  screenerSection   ScreenerSection @relation(fields: [screenerSectionId], references: [id])
+  screenerSectionId String
+  answers           Answer[]
 }
 
 model Answer {
-  id String @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  questionId String
-  value Int
-  screenerResponse ScreenerResponse @relation(fields: [screenerResponseId], references: [id])
+  id                 String           @id @default(uuid())
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  questionId         String
+  value              Int
+  screenerResponse   ScreenerResponse @relation(fields: [screenerResponseId], references: [id])
   screenerResponseId String
 }
 
 model Domain {
-  id String @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name String
+  id               String     @id @default(uuid())
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  name             String
   scoringThreshold Int
-  scoringOperator String
+  scoringOperator  String
   level2Assessment String
-  questions Question[]
+  questions        Question[]
 }

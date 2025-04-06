@@ -23,10 +23,6 @@ const Form = ({ type, displayName, questions, answers }: FormProps) => {
   const [currIndex, setCurrIndex] = useState(0)
   const [formData, setFormData] = useState({})
 
-  useEffect(() => {
-    console.log('currIndex: ', currIndex)
-  }, [currIndex])
-
   const progress = useMemo(() => {
     return Array.isArray(questions) ? (currIndex / questions.length) * 100 : 0
   }, [currIndex, questions])
@@ -69,10 +65,10 @@ const Form = ({ type, displayName, questions, answers }: FormProps) => {
   
   return (
     <section className={styles['container']}>
-      <ProgressBar progress={progress} />
       <div className={styles['form-meta']}>
         <p>Assessment Screener Display Name: {displayName}</p>
       </div>
+      <ProgressBar progress={progress} />
       <form className={styles['form']} onSubmit={(e) => handleSubmit(e)}>
         <Slider
           slideCount={questions.length}

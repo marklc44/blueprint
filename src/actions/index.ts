@@ -2,8 +2,12 @@ import { storeScreenerResponse, getDomains } from "@/api/response"
 import { getScreenerByName } from "@/api/screener"
 import { calculateAssessments } from "@/utils/results"
 
+export const getAllScreeners = () => {
+
+}
+
 export const fetchScreener = async (name: string) => {
-  return await getScreener(name)
+  return await getScreenerByName(name)
 }
 
 

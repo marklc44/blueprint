@@ -8,15 +8,15 @@ export const dynamicParams = true
 
 export async function generateStaticParams() {
   const pages = await getAllScreeners()
+  // console.log('pages: ', pages[0].screenerSections[0])
+
   const params = pages.reduce((acc, curr) => {
-    const { name } = curr
-    const screenerJson = curr.screenerJson
-    if (!screenerJson) {
+    const { name, screenerSections } = curr
+    if (!screenerSections) {
       return
     }
-    if (screenerJson) {
-      const screener: ScreenerJson = screenerJson
-      const sections = screener.content.sections.map((_, idx) => {
+    if (screenerSections) {
+      const sections = screenerSections.map((_, idx) => {
         return {
           name,
           section: idx.toString(),
@@ -37,14 +37,10 @@ export interface PageName {
 
 export default async function AssessmentPage({ params }: { params: PageName }) {
   const { name, section } = await params
-  const page = await getScreenerByName(name)
-  const screenerJson = page?.screenerJson as ScreenerJson
-  const { name: screenerName, disorder, full_name, content } = screenerJson
-  console.log('content: ', content)
+  const page = await getScreenerByName(name.toUpperCase())
+  const { name: screenerName, disorder, fullName, content } = page
 
   const sectionNum = parseInt(section)
-  console.log('sectionNum: ', sectionNum)
-  console.log('content: ', content.sections[sectionNum - 1])
   const contentSection = content?.sections?.[sectionNum - 1]
   
   return (
@@ -53,7 +49,7 @@ export default async function AssessmentPage({ params }: { params: PageName }) {
         <div className={'row-inner'}>
           <h1>{screenerName}</h1>
           <div className={'header'}>
-            <p>Full Name: {full_name}</p>
+            <p>Full Name: {fullName}</p>
             <p>Disorder: {disorder}</p>
           </div>
         </div>
@@ -63,7 +59,7 @@ export default async function AssessmentPage({ params }: { params: PageName }) {
           <section className={'instructions'}>
             <h2 className={'text-2xl mb-4'}><span className="font-bold">Ask the patient: </span>{contentSection?.title}</h2>
           </section>
-          <Form type={contentSection.type} displayName={content.display_name} questions={contentSection.questions} answers={contentSection.answers} />
+          <Form type={contentSection.type} displayName={content.displayName} questions={contentSection.questions} answers={contentSection.answers} />
           <section className={'page-footer'}>
             {content.sections.length > sectionNum && (
               <Link className={'inline-block'}href={`/assessments/${name}/sections/${sectionNum + 1}`}>
