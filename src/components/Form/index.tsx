@@ -60,7 +60,7 @@ const Form = ({
     console.log('formatted data: ', submission)
     // action to submit
     // calcualte results
-    const results = calculateAssessments(submission, domains)
+    const results = calculateAssessments(submission, domains, questions)
     setResults(results)
     // try {
     //   const res = await submitScreenerResponse(submission)
@@ -70,7 +70,7 @@ const Form = ({
     // }
 
     // open results display
-  }, [formData, screenerSectionId, domains])
+  }, [formData, screenerSectionId, domains, questions])
 
   // On completing an answer
   const handleNext = (questionId: string, value: number, idx: number) => {

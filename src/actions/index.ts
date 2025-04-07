@@ -1,9 +1,11 @@
-import { storeScreenerResponse } from "@/api/response"
 import { getScreenerByName } from "@/api/screener"
 import { transformScreener } from "@/utils/transformScreener"
 
 export const getScreenerPage = async (name: string) => {
   const screener = await getScreenerByName(name)
+  const questionMapping = screener?.screenerSections.map((item) => item.questions)
+
+  console.log('questionMapping: ', questionMapping)
 
   return transformScreener(screener)
 }

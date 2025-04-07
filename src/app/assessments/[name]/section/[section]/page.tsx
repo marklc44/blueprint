@@ -42,8 +42,6 @@ export default async function AssessmentPage({ params }: { params: PageName }) {
   const page = await getScreenerPage(name.toUpperCase())
   const domains = await getDomains()
 
-  console.log('domains: ', domains)
-
   if (!page) {
     return notFound()
   }

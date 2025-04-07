@@ -1,8 +1,10 @@
 import { toSnakeCaseLight } from './utils'
 
-export const calculateAssessments = (response: ScreenerResponse, domains: Domain[]) => {
+export const calculateAssessments = (response: ScreenerResponse, domains: Domain[], questions) => {
   const scores = response.answers.reduce((acc, curr) => {
-    acc[curr.domain] = acc[curr.domain] + curr.value
+    console.log('curr: ', curr.value)
+    const currDomain = questions?.find((item) => item.questionId === curr.questionId)?.domain
+    acc[currDomain] = acc[currDomain] ? acc[currDomain] + curr.value : 0 + curr.value
     return acc
   }, {})
 
