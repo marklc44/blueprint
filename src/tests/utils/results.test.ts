@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
 */
-import { calculateAssessments } from "@/utils/results"
+import { calculateAssessments, calculateScores } from "@/utils/results"
 
 const response = {
   "screenerSectionId": "14081ca9-2ff3-461b-bcf1-7a83cca5c752",
@@ -120,8 +120,18 @@ const questionMapping = [
       "domain": "substance_use"
   }
 ]
+const scores = {
+  "depression": 2,
+  "mania": 2,
+  "anxiety": 3,
+  "substance_use": 1
+}
 
 describe('calculateAssessments: generates an array of assessment strings', () => {
+  test('calculates scores by domain', () => {
+    const calcScores = calculateScores(response, domains, questionMapping)
+    expect(calcScores).toEqual(scores)
+  })
   test('calculates assessment array', () => {
     const results = calculateAssessments(response, domains, questionMapping)
     expect(results).toEqual(['PHQ-9', 'ASRM', 'ASSIST'])

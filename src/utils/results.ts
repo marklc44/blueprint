@@ -1,21 +1,17 @@
 import { toSnakeCaseLight } from './utils'
 
-export const calculateScores = () => {
-
-}
-
-export const calculateAssessments = (response: ScreenerResponse, domains: Domain[], questions) => {
-  console.log('response: ', response)
-  console.log('domains: ', domains)
-  console.log('questions: ', questions)
-
-  // calculate scores by domain
-  const scores = response.answers.reduce((acc, curr) => {
+export const calculateScores = (response: ScreenerResponse, domains: Domain[], questions) => {
+  return response.answers.reduce((acc, curr) => {
     console.log('curr: ', curr.value)
     const currDomain = questions?.find((item) => item.questionId === curr.questionId)?.domain
     acc[currDomain] = acc[currDomain] ? acc[currDomain] + curr.value : 0 + curr.value
     return acc
   }, {})
+}
+
+export const calculateAssessments = (response: ScreenerResponse, domains: Domain[], questions) => {
+  // calculate scores by domain
+  const scores = calculateScores(response, domains, questions)
 
   console.log('scores: ', scores)
 
