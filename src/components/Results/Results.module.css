@@ -1,5 +1,14 @@
 @reference "../../app/globals.css";
 
+.backdrop {
+  @apply absolute top-0 left-0 h-screen w-screen bg-medium-gray opacity-10 flex flex-row justify-center items-center;
+}
 .container {
-  @apply overflow-hidden;
+  @apply opacity-100 absolute bottom-0 left-0 h-[300px] w-full flex flex-col gap-4 justify-center items-center overflow-hidden bg-green-dark text-white;
+}
+.title {
+  @apply text-xl font-bold;
+}
+.assessments {
+  @apply text-3xl flex flex-row gap-4;
 }

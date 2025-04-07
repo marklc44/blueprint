@@ -114,9 +114,12 @@ Get eng and cross-functional team input. It's important to incorporate other ide
  - Theming with design team: general polish, split into shared and specific components, with custom or third party component library. I prefer lightweight, headless and tailwind based as is in fashion. Discuss with team. 
  - Some theme colors were taken from the Blueprint marketing site, but otherwise minimal theming
  - Design sucks - typography and vertical spacing are awful. Knowledge of the subject matter (and a designer) would lead to better presentation of meta data, visual grouping and information hierarchy.
- - Submit answers button should show with last question visible and alongside back button
- - Results display should return to start on close
+ - Blank awkward space after last question. Could move buttons up, retain last question, or display complete message.
  - Navigation and home: starting point with some way to group and navigate through assessment screeners, possibly gating and/or curating screeners for specific users
+ - Questions slider and results dialog are crude - clean spacing, alignment, transitions, interactions
+ - Responsive - not using problematic css/js for mobile browsers, but very little responsive testing done. And text-size, layout etc.
+ - Clean up html structure, css utility usage - got a little fast and loose with utilities inline vs in modules, usage of `<section>` where items evolved not to their own sections, etc.
+ - Accessibility aria attrs, also helps in test/experiment element selection
 
 ### Analytics/Experimentation/Feature Flagging
 Simple to begin with. I like Posthog because it covers web analytics, product analytics, CDP/event pipelines, warehouse, feature flagging, experiments all with significant cost savings over other common options, and will take a while to grow out of.

@@ -48,27 +48,25 @@ export default async function AssessmentPage({ params }: { params: PageName }) {
   const { name: screenerName, disorder, fullName, content } = page
   const sectionNum = parseInt(section)
   const contentSection = content?.sections?.[sectionNum - 1]
-  console.log('contentSection: ', contentSection)
   
   return (
-    <article>
+    <article className={'relative'}>
       <section className={'screener-meta row bg-pale-gray'}>
         <div className={'row-inner'}>
-          <h1>{screenerName}</h1>
+          <h1 className="text-4xl"><span className="font-bold">{screenerName}</span> | {fullName}</h1>
           <div className={'header'}>
-            <p>Full Name: {fullName}</p>
-            <p>Disorder: {disorder}</p>
+            <p><span className="font-bold">Disorder:</span> {disorder}</p>
           </div>
         </div>
       </section>
       <section className={'screener-section row'}>
         <div className={'row-inner'}>
           <section className={'instructions'}>
-            <h2 className={'text-2xl mb-4'}><span className="font-bold">Ask the patient: </span>{contentSection?.title}</h2>
+            <p>Assessment Screener Display Name: {content.displayName}</p>
+            <h2 className={'text-2xl mb-2'}><span className="font-bold">Ask the patient: </span>{contentSection?.title}</h2>
           </section>
           <Form
             type={contentSection.type}
-            displayName={content.displayName}
             questions={contentSection.questions}
             answers={contentSection.answers}
             screenerSectionId={contentSection.id}

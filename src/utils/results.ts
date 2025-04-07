@@ -13,8 +13,6 @@ export const calculateAssessments = (response: ScreenerResponse, domains: Domain
   // calculate scores by domain
   const scores = calculateScores(response, domains, questions)
 
-  console.log('scores: ', scores)
-
   // create assessments from scores
   const results = domains.filter((item) => {
     const snakeCaseName = toSnakeCaseLight(item.name)

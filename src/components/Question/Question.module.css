@@ -4,5 +4,11 @@
   @apply overflow-hidden;
 }
 .title {
-  @apply text-xl mb-4 ;
+  @apply text-2xl mb-4;
+}
+
+@media (min-width: 768px) {
+  .title {
+    @apply text-4xl mb-4;
+  }
 }

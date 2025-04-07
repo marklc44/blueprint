@@ -8,6 +8,8 @@ import Slider from '../Slider'
 import Slide from '../Slider/Slide'
 import { submitScreenerResponse } from '@/actions'
 import { calculateAssessments } from '@/utils/results'
+import Results from '../Results'
+import { Domain } from '@prisma/client'
 
 /**
  * 
@@ -16,16 +18,14 @@ import { calculateAssessments } from '@/utils/results'
 
 export interface FormProps {
   type: Section['type']
-  displayName: Content['display_name']
   questions: Section['questions']
   answers: Section['answers']
   screenerSectionId: string
-  domains: any
+  domains: Array<Partial<Domain>>
 }
 
 const Form = ({
   type,
-  displayName,
   questions,
   answers,
   screenerSectionId,
@@ -33,7 +33,8 @@ const Form = ({
 }: FormProps) => {
   const [currIndex, setCurrIndex] = useState(0)
   const [formData, setFormData] = useState({})
-  const [results, setResults] = useState([])
+  const [results, setResults] = useState<string[]>([])
+  const [displayResults, setDisplayResults] = useState(false)
 
   useEffect(() => {
     console.log('results: ', results)
@@ -58,10 +59,10 @@ const Form = ({
       answers,
     }
     console.log('formatted data: ', submission)
-    // action to submit
-    // calcualte results
+
     const results = calculateAssessments(submission, domains, questions)
     setResults(results)
+    setDisplayResults(true)
     // try {
     //   const res = await submitScreenerResponse(submission)
 
@@ -86,7 +87,10 @@ const Form = ({
     setCurrIndex(currIndex - 1)
   }
   const handleCloseResults = () => {
-    // setResults([])
+    setDisplayResults(false)
+    setResults([])
+    setCurrIndex(0)
+    setFormData({})
   }
 
   useEffect(() => {
@@ -94,40 +98,45 @@ const Form = ({
   }, [formData])
   
   return (
-    <section className={styles['container']}>
-      <div className={styles['form-meta']}>
-        <p>Assessment Screener Display Name: {displayName}</p>
-      </div>
-      <ProgressBar progress={progress} />
-      <form className={styles['form']} onSubmit={(e) => handleSubmit(e)}>
-        <Slider
-          slideCount={questions.length}
-          currSlideIndex={currIndex}
-        >
-          {questions.map((item, idx) => {
-            return (
-              <Slide
-                key={`slide-${idx}-question-${item.question_id}`}
-                slideCount={questions.length}
-              >
-                <Question
-                  index={idx}
-                  question={item}
-                  answers={answers}
-                  type={type}
-                  handleAnswer={handleNext}
-                  handlePrev={handlePrev}
-                />
-                {idx > 0 && <button onClick={() => handlePrev()}>&laquo; back</button>}
-              </Slide>
-            )
-          })}
-        </Slider>
-        {currIndex >= questions.length && (
-          <button type="submit">Submit Answers</button>
-        )}
-      </form>
-    </section>
+    <>
+      <section className={styles['container']}> 
+        <div className="mb-8">
+          <ProgressBar progress={progress} />
+        </div>
+        <form className={styles['form']} onSubmit={(e) => handleSubmit(e)}>
+          <Slider
+            slideCount={questions.length}
+            currSlideIndex={currIndex}
+          >
+            {questions.map((item, idx) => {
+              return (
+                <Slide
+                  key={`slide-${idx}-question-${item.question_id}`}
+                  slideCount={questions.length}
+                >
+                  <Question
+                    index={idx}
+                    question={item}
+                    answers={answers}
+                    type={type}
+                    handleAnswer={handleNext}
+                    handlePrev={handlePrev}
+                  />
+                </Slide>
+              )
+            })}
+          </Slider>
+          <div className="flex flex-row gap-4">
+            {currIndex > 0 && <button className="button secondary" onClick={() => handlePrev()}>&laquo; back</button>}
+            {currIndex >= questions.length && (
+              <button className="button primary" type="submit">Submit Answers &raquo;</button>
+            )}
+          </div>
+          
+        </form>
+      </section>
+      {displayResults && <Results results={results} handleClose={handleCloseResults} />}
+    </>
   )
 }
 
