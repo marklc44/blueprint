@@ -11,11 +11,6 @@ import { calculateAssessments } from '@/utils/results'
 import Results from '../Results'
 import { Domain } from '@prisma/client'
 
-/**
- * 
- * TODO: Calculate and display the results by domain as we go?
- */
-
 export interface FormProps {
   type: Section['type']
   questions: Section['questions']
@@ -35,6 +30,7 @@ const Form = ({
   const [formData, setFormData] = useState({})
   const [results, setResults] = useState<string[]>([])
   const [displayResults, setDisplayResults] = useState(false)
+  const [savedSuccessMsg, setSavedSuccessMsg] = useState<string | null>(null)
 
   useEffect(() => {
     console.log('results: ', results)
@@ -63,12 +59,16 @@ const Form = ({
     const results = calculateAssessments(submission, domains, questions)
     setResults(results)
     setDisplayResults(true)
-    // try {
-    //   const res = await submitScreenerResponse(submission)
-
-    // } catch (error) {
-    //   console.error(error)
-    // }
+    try {
+      const res = await submitScreenerResponse(submission)
+      // TODO: currently undefined, but storing correctly. Debug: app/api/responses/route.ts
+      // then set response state to display a message that results have been saved or something went wrong
+      console.log('res: ', res)
+      setSavedSuccessMsg('Your answers have been saved!')
+    } catch (error) {
+      console.error(error)
+      setSavedSuccessMsg('We were unable to save your answers. Please submit them again.')
+    }
 
     // open results display
   }, [formData, screenerSectionId, domains, questions])
@@ -91,6 +91,7 @@ const Form = ({
     setResults([])
     setCurrIndex(0)
     setFormData({})
+    setSavedSuccessMsg(null)
   }
 
   useEffect(() => {
@@ -135,7 +136,7 @@ const Form = ({
           
         </form>
       </section>
-      {displayResults && <Results results={results} handleClose={handleCloseResults} />}
+      {displayResults && <Results results={results} handleClose={handleCloseResults} message={savedSuccessMsg} />}
     </>
   )
 }
