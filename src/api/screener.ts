@@ -17,7 +17,15 @@ export const getScreenerByName = async (name: string) => {
     include: {
       screenerSections: {
         include: {
-          questions: true,
+          questions: {
+            include: {
+              question: {
+                include: {
+                  domain: true,
+                }
+              },
+            }
+          },
         },
       },
     },

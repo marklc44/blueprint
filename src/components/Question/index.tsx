@@ -12,7 +12,13 @@ export interface QuestionProps {
   handlePrev: () => void
 }
 
-const Question = ({ index, question, type, answers, handleAnswer }: QuestionProps) => {
+const Question = ({
+  index,
+  question,
+  type,
+  answers,
+  handleAnswer
+}: QuestionProps) => {
 
   return (
     <section className={styles['container']}>
@@ -23,7 +29,7 @@ const Question = ({ index, question, type, answers, handleAnswer }: QuestionProp
         <StandardOptions
           answers={answers}
           handleClick={(value) => {
-            handleAnswer(question.question_id, value, index)
+            handleAnswer(question.questionId, value, index)
           }}
         />
       )}

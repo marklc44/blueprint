@@ -4,13 +4,13 @@ import Form from "@/components/Form"
 import { ScreenerJson } from "@/types/screener"
 import Link from "next/link"
 import { notFound } from 'next/navigation'
+import { getDomains } from "@/api/response"
 
 export const revalidate = 60 // 86400 // daily
 export const dynamicParams = true
 
 export async function generateStaticParams() {
   const pages = await getAllScreeners()
-  // console.log('pages: ', pages[0].screenerSections[0])
 
   const params = pages.reduce((acc, curr) => {
     const { name, screenerSections } = curr
@@ -40,6 +40,9 @@ export interface PageName {
 export default async function AssessmentPage({ params }: { params: PageName }) {
   const { name, section } = await params
   const page = await getScreenerPage(name.toUpperCase())
+  const domains = await getDomains()
+
+  console.log('domains: ', domains)
 
   if (!page) {
     return notFound()
@@ -47,6 +50,7 @@ export default async function AssessmentPage({ params }: { params: PageName }) {
   const { name: screenerName, disorder, fullName, content } = page
   const sectionNum = parseInt(section)
   const contentSection = content?.sections?.[sectionNum - 1]
+  console.log('contentSection: ', contentSection)
   
   return (
     <article>
@@ -64,7 +68,14 @@ export default async function AssessmentPage({ params }: { params: PageName }) {
           <section className={'instructions'}>
             <h2 className={'text-2xl mb-4'}><span className="font-bold">Ask the patient: </span>{contentSection?.title}</h2>
           </section>
-          <Form type={contentSection.type} displayName={content.displayName} questions={contentSection.questions} answers={contentSection.answers} />
+          <Form
+            type={contentSection.type}
+            displayName={content.displayName}
+            questions={contentSection.questions}
+            answers={contentSection.answers}
+            screenerSectionId={contentSection.id}
+            domains={domains}
+          />
           <section className={'page-footer'}>
             {content.sections.length > sectionNum && (
               <Link className={'inline-block'}href={`/assessments/${name}/sections/${sectionNum + 1}`}>

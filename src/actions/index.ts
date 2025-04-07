@@ -1,6 +1,5 @@
-import { storeScreenerResponse, getDomains } from "@/api/response"
+import { storeScreenerResponse } from "@/api/response"
 import { getScreenerByName } from "@/api/screener"
-import { calculateAssessments } from "@/utils/results"
 import { transformScreener } from "@/utils/transformScreener"
 
 export const getScreenerPage = async (name: string) => {
@@ -10,9 +9,13 @@ export const getScreenerPage = async (name: string) => {
 }
 
 export const submitScreenerResponse = async (response: ScreenerResponse) => {
-  await storeScreenerResponse(response)
-  const domains = await getDomains()
-
-  return calculateAssessments(response, domains)
+  try {
+    const res = await fetch('/api/responses', {
+      method: 'POST',
+      body: JSON.stringify(response),
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }
 

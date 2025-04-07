@@ -2,10 +2,12 @@
 import { Section, Content } from '@/types/screener'
 import styles from './Form.module.css'
 import ProgressBar from '../ProgressBar'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import Question from '../Question'
 import Slider from '../Slider'
 import Slide from '../Slider/Slide'
+import { submitScreenerResponse } from '@/actions'
+import { calculateAssessments } from '@/utils/results'
 
 /**
  * 
@@ -17,37 +19,62 @@ export interface FormProps {
   displayName: Content['display_name']
   questions: Section['questions']
   answers: Section['answers']
+  screenerSectionId: string
+  domains: any
 }
 
-const Form = ({ type, displayName, questions, answers }: FormProps) => {
+const Form = ({
+  type,
+  displayName,
+  questions,
+  answers,
+  screenerSectionId,
+  domains,
+}: FormProps) => {
   const [currIndex, setCurrIndex] = useState(0)
   const [formData, setFormData] = useState({})
+  const [results, setResults] = useState([])
+
+  useEffect(() => {
+    console.log('results: ', results)
+    console.log('questions: ', questions)
+  }, [results, questions])
 
   const progress = useMemo(() => {
     return Array.isArray(questions) ? (currIndex / questions.length) * 100 : 0
   }, [currIndex, questions])
 
-  const handleSubmit = useCallback((e) => {
+  const handleSubmit = useCallback(async (e: FormEvent) => {
     e.preventDefault()
     
-    const submitData = Object.keys(formData).map((item) => {
+    const answers = Object.keys(formData).map((item) => {
       return {
-        question_id: item,
+        questionId: item,
         value: formData[item],
       }
     })
-    console.log('formatted data: ', submitData)
+    const submission = {
+      screenerSectionId,
+      answers,
+    }
+    console.log('formatted data: ', submission)
     // action to submit
-    
+    // calcualte results
+    const results = calculateAssessments(submission, domains)
+    setResults(results)
+    // try {
+    //   const res = await submitScreenerResponse(submission)
+
+    // } catch (error) {
+    //   console.error(error)
+    // }
+
     // open results display
-  }, [formData])
+  }, [formData, screenerSectionId, domains])
 
   // On completing an answer
-  const handleNext = (questionId, value, idx) => {
-    console.log('value: ', value)
-    // update slide index
+  const handleNext = (questionId: string, value: number, idx: number) => {
     setCurrIndex(idx + 1)
-    // update answer state
     setFormData((prev) => {
       return {
         ...prev,
@@ -57,6 +84,9 @@ const Form = ({ type, displayName, questions, answers }: FormProps) => {
   }
   const handlePrev = () => {
     setCurrIndex(currIndex - 1)
+  }
+  const handleCloseResults = () => {
+    // setResults([])
   }
 
   useEffect(() => {
