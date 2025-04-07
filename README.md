@@ -21,13 +21,14 @@ Generally, tech stack choices were made for a small scope with fast development,
 
 ### Database
 See `prisma/schema.prisma`
-I used a relational SQLite database with 5 tables. The data could lend itself to a nosql document db, but I went with what I know best. Would discuss with the team in the real world.
+I used a relational SQLite database with 7 tables. The data could lend itself to a nosql document db, but I went with what I know best. Would discuss with the team in the real world.
  - Screener - main questionnaire object
  - ScreenerSection - one item in the content.sections array, 1 screener to many ScreenerSections
  - Question - question object with domain mapping, many questions to many ScreenerSections. 
  - QuestionsOnScreenerSections - join table for m to m Questions and ScreenerSections. Order of questions is by createdAt. Not optimal - should add a question index here.
  - Domain - one domain scoring rule with Assessment result and score threshold, 1 domain to many questions
  - ScreenerResponse - answers to screener questions, many screener responses to 1 ScreenerSection
+ - Answer - answer to a single question, many answers to 1 ScreenerResponse
 
 #### Prisma
 Prisma makes it very fast to design a schema, connect to local and external databases, create and run migrations in multiple environments, is easy to understand and maintain, and provides some guardrails against common antipatterns for someone like me who doesn't design databases on a regular basis.
