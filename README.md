@@ -93,9 +93,10 @@ Get eng and cross-functional team input. It's important to incorporate other ide
  - Left some console logs for your convenience. Remove.
  - Consider stricter linting/formatting rules. Discuss with team.
 
-### Prod: API
+### Prod: DB/API
  - Better error handling: log serverside fetch errors, return db create errors, parse messages and display in toasts with actions to the user when relevant (i.e. start over or resubmit)
  - API/UX - add suspense with fallback if important data cannot be added in UI (i.e. if dynamically loaded Screener can't be generated, provide a link to home or try again, etc.)
+ - Better migration scripts - Prisma migration/push scripts don't work OTB with Turso, so using their CLI. Or migrate to a service like PlanetScale (not free).
 
 ### Prod: Testing
  - Unit test all utilities and API. Current coverage is minimal. Hook into Github actions for build tests.
