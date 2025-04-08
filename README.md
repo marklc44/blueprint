@@ -1,11 +1,12 @@
 # Submission for Blueprint.ai fullstack exercise
-Candidate: Mark Centoni
-Position: Software Engineer (Growth)
-Github: https://github.com/marklc44
-Site: https://markcentoni.com
+ - Candidate: Mark Centoni
+ - Position: Software Engineer (Growth)
+ - Github: https://github.com/marklc44
+ - Site: https://markcentoni.com
 
-Application demo: https://assessements.vercel.app/
-There's a redirect that will take you directly to the single screener page, but would want to create an index of screeners when there are more screeners.
+Application demo: https://blueprint-tau-steel.vercel.app
+There's a redirect that will take you directly to the single screener page: https://blueprint-tau-steel.vercel.app/assessments/bpds/section/1
+Eventually use the homepage to login or index and navigate multiple screeners.
 
 ---
 
@@ -13,11 +14,11 @@ There's a redirect that will take you directly to the single screener page, but 
 The exercise is to create a full stack application that presents a user with a mental health diagnostic screening questionnaire to help determine the severity of symptoms they may be experiencing, and aid a trained therapist in creating a treatment plan. Using questions categorized by domain along with domain scoring rules, the questionnaire response is converted to 0 or more evidence-based Level-2 assessments.
 
 ## Solution
-I'm using the term Screener to be the questionnaire with one more sections. An assessment, as I understand it, is the code or acronym for a grouping of symptoms, and is the objective of the Screener, but not necessarily the questionnaire itself.
+*Terminology:* I'm using the term Screener to be the questionnaire with one more sections. An assessment, as I understand it, is the code or acronym for a grouping of symptoms, and is the objective of the Screener, but not necessarily the questionnaire itself.
 
 The application uses a SQLite/LibSQL database hosted on Turso managed hosting with the "serverless" API layer built with Prisma ORM, one API route and Next.js server actions. The frontend is built on Next.js app routing with multiple dynamic route params, React, and hosted on Vercel. The application is written in TypeScript, using Tailwind4 for styling and Jest for unit testing.
 
-The repo on Github repo has two branches, main and develop, that align with Vercel production and preview environments respectively. Minimal unit testing is done with Jest, and Github actions could be included to run prebuild unit tests, but are not here.
+The repo on Github has two branches, main and develop, that align with Vercel production and preview environments respectively. Minimal unit testing is done with Jest, and Github actions could be included to run prebuild unit tests, but are not here.
 
 Generally, tech stack choices were made for a small scope with fast development, fast performance, reasonable reliability and maintainability at no cost.
 
@@ -33,12 +34,10 @@ I used a relational SQLite database with 7 tables. The data could lend itself to
  - Answer - answer to a single question, many answers to 1 ScreenerResponse
 
 #### ORM: Prisma
-Prisma makes it very fast to design a schema, connect to local and external databases, create and run migrations in multiple environments, is easy to understand and maintain, and provides some guardrails against common antipatterns for someone like me who doesn't design databases on a regular basis.
-
-In production, the DB is hosted on Turso.
+Prisma makes it very fast to design a schema, connect to local and external databases, create and run migrations in multiple environments, is easy to understand and maintain, and provides some guardrails against common antipatterns
 
 #### Data Caveats
- - Answers is a JSON object on ScreenerSection, but probably should be a model of AnswerOptions on its own with a type and the JSON for options, so different AnswerOptions could be pulled in based on the type of the ScreenerSection.
+ - Answers is a JSON object on ScreenerSection, but probably should be a model of AnswerOptions on its own with a type field and the JSON field for options, so different AnswerOptions could be pulled based on the type of the ScreenerSection.
  - The screener JSON structure did not include the domain along with the questions which gave me the most pause. In person, I would ask why domain was not included. I included it and took the question mapping from the screener questions for expediency, but maybe earned demerits for it. Curious to know if the JSON structure was intended to be a hard requirement and why.
 
 ### Solution: API design
@@ -48,11 +47,15 @@ In production, the DB is hosted on Turso.
 - `getDomains` - get domain scoring rules and assessment mapping for calculating results.
 
 ### Solution: Business logic/controllers
-- `getScreenerPage` - Uses `getScreenerByName` to get a single screener and `transformScreener` to transform it match the JSON object structure with added question domain mapping. The transformation doesn't have tests, but should. As above, the structure of the object is slightly different from the example as domain is included with each question rather than making another call or returning a separate object.
+- `generateStaticParams` - where we transform the result of `getAllScreeners` to page params `{ name, section }` to build routes
+- `getScreenerPage` - Uses `getScreenerByName` to get a single screener and `transformScreener` to transform it match the JSON object structure with added question domain mapping. As above, the structure of the object is slightly different from the example as domain is included with each question rather than making another call or returning a separate object.
 - `storeScreenerResponse` - Stores the response to the screener. Additional util for calculating the results from domain and answers used in the client.
+- `calculateScores` and `calculateAssessments` - generate the list of assessments to display to the user
 
 ### Solution: Testing
-Using Jest for unit tests.
+ - Using Jest for unit tests. Could use Vitest, but can cause issues with Vercel Analytics if not configured correctly.
+ - Includes unit tests for `calculateScores` and `calculateAssessments`.
+ - Should add unit tests for `transformScreener`.
 
 ### Solution: Routing
  - Using Next.js, industry standard router recommended by the React team, and lots of developers know it. 
@@ -82,12 +85,11 @@ After answers are stored and assessment is calculated, display the results in a 
 Get eng and cross-functional team input. It's important to incorporate other ideas and build a prod app in a way the team can be productive. I'm assuming this app is going to part of or used in conjunction with other product offerings.
 
 ### Prod: Workflow
- - Where on the CI/CD spectrum do we want start?
- - Git Workflow (start), Github Workflow, variants
+ - Git Workflow (start), Github Workflow (CI/CD), variants
  - Communication - deployment channels, PR/MR templates, hotfix and patch process, etc.
  - Integrate with project management workflow, Agile, Scrum, etc.
 
- ### Types and cleanup
+ ### Prod: Types and cleanup
  - Fix 3 @ts-expect-errors with todos
  - Fix ScreenerHack with an explicit chain of Prisma types describing the db call result
  - Left some console logs for your convenience. Remove.
@@ -101,7 +103,7 @@ Get eng and cross-functional team input. It's important to incorporate other ide
 
 ### Prod: Testing
  - Unit test all utilities and API. Current coverage is minimal. Hook into Github actions for build tests.
- - Less brittle, more flexible test data mocking
+ - Less brittle data mocking
  - Add component testing and consider Storybook as way to orchestrate component testing and create docs. Sync with design on component library.
  - Add E2E when complexity of data states can no longer be modeled well enough modularly (Playwright is great)
 
@@ -110,26 +112,26 @@ Get eng and cross-functional team input. It's important to incorporate other ide
  - Further tooling and analysis with Splunk, New Relic, etc. to consider.
 
 ### Prod: Users, Auth and Security
- - Need some admin functionality to manage the questionnaire, in UI or external system. Auth and permissions for admin, curation, monetization and security. Spam could fill up the db pretty quickly (though there's little reason to do so, now)
+ - Need some admin functionality to manage the questionnaires, in UI or external system. Auth and permissions for admin, curation, monetization and security. Spam could fill up the db pretty quickly (though there's little reason to do so, now)
  - Auth service like Clerk or Supabase, or custom. 
  - Stateful sessions stored in DB are most secure, but could use bearer tokens, JWT with middleware and frequent refresh strategy.
  - An external CDN with rules on the edge for rate limiting and blacklisting
 
 ### Prod: Performance
- - Nextjs ISR works fine in this scope. Tweak simple revalidation interval based on how frequently we expect Screener create/update.
+ - Nextjs ISR is good for this scope. Tweak simple revalidation interval based on how frequently we expect Screener create/update.
  - As complexity grows, consider tagging content for more granular data revalidation, or using webhooks to revalidate based on third party updates.
  - DB indexing, normalized caching, could be useful if searching/filtering larger number of screeners.
 
 ### Prod: Presentation/UX
- - Discuss css modules/tailwind with team. I like CSS modules for readability of responsive and element state styling, especially with Tailwind4's improved bundling, but others may not. 
+ - Discuss CSS modules/tailwind with team. I like CSS modules for readability of responsive and element state styling, especially with Tailwind4's improved bundling, but others may not. 
  - Theming with design team: general polish, split into shared and specific components, with custom or third party component library.
- - Some theme colors were taken from the Blueprint marketing site, but otherwise minimal theming. Haven't ramped up on translating `tailwind.config.ts` theme to css based theming of Tailwind4 for device sizes, etc.
+ - Some theme colors were taken from the Blueprint marketing site, but otherwise minimal theming. I haven't ramped up on translating `tailwind.config.ts` theme to CSS based theming of Tailwind4 for device sizes, etc.
  - Design sucks - typography and vertical spacing not great. Knowledge of the subject matter (and a designer) would lead to better presentation of meta data, visual grouping and information hierarchy.
  - Blank awkward space after last question. Could move buttons up, retain last question, or display completed message.
  - Navigation and home: starting point with some way to group and navigate through assessment screeners, possibly gating and/or curating screeners for specific users
  - Questions slider and results dialog are crude - clean up spacing, alignment, transitions, interactions
  - Responsive - functionally cross-device supported css/js, but needs device testing, more responsive styling.
- - Clean up html structure, css utility usage - fast and loose with utilities inline vs in modules toward the end, nested `<section>` elements
+ - Clean up html structure, CSS utility usage - fast and loose with utilities inline vs in modules in some places, nested `<section>` elements
  - Accessibility aria attrs, also helps in test/experiment element selection
  - Store strings in consts for consistency and easier translation/localization (eventually)
  - Favicon, device icons, page metadata

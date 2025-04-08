@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 import { getDomains } from "@/api/response"
 import { Section } from "@/types/screener"
 
-export const revalidate = 60 // 86400 // daily
+export const revalidate = 86400 // 86400 // daily
 export const dynamicParams = true
 
 export async function generateStaticParams() {
