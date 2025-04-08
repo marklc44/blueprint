@@ -11,6 +11,7 @@ export const dynamicParams = true
 
 export async function generateStaticParams() {
   const pages = await getAllScreeners()
+
   // @ts-expect-error TODO: ran out of time
   const params = pages.reduce((acc, curr) => {
     const { name, screenerSections } = curr
