@@ -1,10 +1,10 @@
-import { ScreenerResponseCreateArgs } from './../../node_modules/.prisma/client/index.d'
 import { prisma } from "../db/client"
+import type { Prisma } from "@prisma/client"
+import type { StoreScreenerResponseArgs } from "@/types/screener"
 
-// TODO: store response
-export const storeScreenerResponse = async (response: ScreenerResponseCreateArgs) => {
-  console.log('request body: ', response)
-  const createArgs = {
+// Store answers
+export const storeScreenerResponse = async (response: StoreScreenerResponseArgs) => {
+  const createArgs: Prisma.ScreenerResponseCreateArgs = {
     data: {
       screenerSectionId: response.screenerSectionId,
       answers: {
@@ -15,7 +15,7 @@ export const storeScreenerResponse = async (response: ScreenerResponseCreateArgs
   return await prisma.screenerResponse.create(createArgs)
 }
 // Get domains
-export const getDomains = async () => {
+export const getDomains = async (): Promise<Prisma.DomainGetPayload<object | undefined>[]> => {
   return await prisma.domain.findMany()
 }
 

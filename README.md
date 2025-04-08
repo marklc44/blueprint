@@ -87,6 +87,12 @@ Get eng and cross-functional team input. It's important to incorporate other ide
  - Communication - deployment channels, PR/MR templates, hotfix and patch process, etc.
  - Integrate with project management workflow, Agile, Scrum, etc.
 
+ ### Types and cleanup
+ - Fix 3 @ts-expect-errors with todos
+ - Fix ScreenerHack with an explicit chain of Prisma types describing the db call result
+ - Left some console logs for your convenience. Remove.
+ - Consider stricter linting/formatting rules. Discuss with team.
+
 ### Prod: API
  - Better error handling: log serverside fetch errors, return db create errors, parse messages and display in toasts with actions to the user when relevant (i.e. start over or resubmit)
  - API/UX - add suspense with fallback if important data cannot be added in UI (i.e. if dynamically loaded Screener can't be generated, provide a link to home or try again, etc.)

@@ -3,11 +3,15 @@ import styles from './Results.module.css'
 
 export interface ResultsProps {
   results?: string[]
-  message?: string
+  message?: string | null
   handleClose: () => void
 }
 
-const Results = ({ results, message, handleClose }: ResultsProps) => {
+const Results = ({
+  results,
+  message,
+  handleClose
+}: ResultsProps) => {
   return (
     <>
       <div className={styles['backdrop']} onClick={() => handleClose()}></div>

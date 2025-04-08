@@ -1,7 +1,7 @@
-import { Screener } from "@prisma/client"
 import { toSnakeCaseLight } from "./utils"
+import { ScreenerHack } from "@/types/screener"
 
-export const transformScreener = (screener: Screener) => {
+export const transformScreener = (screener: ScreenerHack) => {
   const { id, name: screenerName, disorder, fullName, displayName } = screener
   // flatten questions
   const sections = screener?.screenerSections?.map((item) => {
@@ -9,7 +9,7 @@ export const transformScreener = (screener: Screener) => {
       return {
         questionId: q.question.id,
         title: q.question.title,
-        domain: toSnakeCaseLight(q.question.domain.name),
+        domain: q?.question?.domain?.name && toSnakeCaseLight(q.question.domain.name),
       }
     })
     return {

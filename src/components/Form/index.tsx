@@ -1,22 +1,27 @@
 'use client'
-import { Section, Content } from '@/types/screener'
+import { Section, StoreScreenerResponseArgs } from '@/types/screener'
 import styles from './Form.module.css'
 import ProgressBar from '../ProgressBar'
-import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react'
+import { FormEvent, useCallback, useMemo, useState } from 'react'
 import Question from '../Question'
 import Slider from '../Slider'
 import Slide from '../Slider/Slide'
 import { submitScreenerResponse } from '@/actions'
 import { calculateAssessments } from '@/utils/results'
 import Results from '../Results'
-import { Domain } from '@prisma/client'
+import { hasKey } from '@/types/screener'
+import type { Prisma } from '@prisma/client'
 
 export interface FormProps {
   type: Section['type']
   questions: Section['questions']
   answers: Section['answers']
   screenerSectionId: string
-  domains: Array<Partial<Domain>>
+  domains: Prisma.DomainGetPayload<object>[]
+}
+
+export interface FormData {
+  [key: string]: number
 }
 
 const Form = ({
@@ -27,15 +32,10 @@ const Form = ({
   domains,
 }: FormProps) => {
   const [currIndex, setCurrIndex] = useState(0)
-  const [formData, setFormData] = useState({})
+  const [formData, setFormData] = useState<object | FormData>({})
   const [results, setResults] = useState<string[]>([])
   const [displayResults, setDisplayResults] = useState(false)
   const [savedSuccessMsg, setSavedSuccessMsg] = useState<string | null>(null)
-
-  useEffect(() => {
-    console.log('results: ', results)
-    console.log('questions: ', questions)
-  }, [results, questions])
 
   const progress = useMemo(() => {
     return Array.isArray(questions) ? (currIndex / questions.length) * 100 : 0
@@ -47,30 +47,29 @@ const Form = ({
     const answers = Object.keys(formData).map((item) => {
       return {
         questionId: item,
-        value: formData[item],
+        // @ts-expect-error TODO: ran out of time
+        value: hasKey(formData, item) ? formData[item] : 0,
       }
     })
-    const submission = {
+
+    const submission: StoreScreenerResponseArgs = {
       screenerSectionId,
       answers,
     }
-    console.log('formatted data: ', submission)
+    console.log('formatted submission: ', submission)
 
     const results = calculateAssessments(submission, domains, questions)
     setResults(results)
     setDisplayResults(true)
     try {
       const res = await submitScreenerResponse(submission)
-      // TODO: currently undefined, but storing correctly. Debug: app/api/responses/route.ts
-      // then set response state to display a message that results have been saved or something went wrong
-      console.log('res: ', res)
+      console.log('submitScreenerResponse res: ', res)
       setSavedSuccessMsg('Your answers have been saved!')
     } catch (error) {
-      console.error(error)
+      console.error('submitScreenerResponse error: ', error)
       setSavedSuccessMsg('We were unable to save your answers. Please submit them again.')
     }
 
-    // open results display
   }, [formData, screenerSectionId, domains, questions])
 
   // On completing an answer
@@ -93,10 +92,6 @@ const Form = ({
     setFormData({})
     setSavedSuccessMsg(null)
   }
-
-  useEffect(() => {
-    console.log('formData: ', formData)
-  }, [formData])
   
   return (
     <>
@@ -112,7 +107,7 @@ const Form = ({
             {questions.map((item, idx) => {
               return (
                 <Slide
-                  key={`slide-${idx}-question-${item.question_id}`}
+                  key={`slide-${idx}-question-${item.questionId}`}
                   slideCount={questions.length}
                 >
                   <Question
