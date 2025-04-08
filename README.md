@@ -119,17 +119,18 @@ Get eng and cross-functional team input. It's important to incorporate other ide
  - DB indexing, normalized caching, could be useful if searching/filtering larger number of screeners.
 
 ### Prod: Presentation/UX
- - I like CSS modules, especially with Tailwind4's improved style bundling, for readability of responsive and element state styling, but others may not. Discuss with team.
- - Theming with design team: general polish, split into shared and specific components, with custom or third party component library. I prefer lightweight, headless and tailwind based as is in fashion. Discuss with team. 
- - Some theme colors were taken from the Blueprint marketing site, but otherwise minimal theming. Haven't ramped up on translating `tailwind.config.ts` theme to css based theming of Tailwind4 for device sizes and other utility features.
- - Design sucks - typography and vertical spacing are awful. Knowledge of the subject matter (and a designer) would lead to better presentation of meta data, visual grouping and information hierarchy.
+ - Discuss css modules/tailwind with team. I like CSS modules for readability of responsive and element state styling, especially with Tailwind4's improved bundling, but others may not. 
+ - Theming with design team: general polish, split into shared and specific components, with custom or third party component library.
+ - Some theme colors were taken from the Blueprint marketing site, but otherwise minimal theming. Haven't ramped up on translating `tailwind.config.ts` theme to css based theming of Tailwind4 for device sizes, etc.
+ - Design sucks - typography and vertical spacing not great. Knowledge of the subject matter (and a designer) would lead to better presentation of meta data, visual grouping and information hierarchy.
  - Blank awkward space after last question. Could move buttons up, retain last question, or display completed message.
  - Navigation and home: starting point with some way to group and navigate through assessment screeners, possibly gating and/or curating screeners for specific users
- - Questions slider and results dialog are crude - clean spacing, alignment, transitions, interactions
- - Responsive - not using problematic css/js for mobile browsers, but very little responsive testing done. And text-size, layout etc.
- - Clean up html structure, css utility usage - got a little fast and loose with utilities inline vs in modules, usage of `<section>` where items evolved not to their own sections, etc.
+ - Questions slider and results dialog are crude - clean up spacing, alignment, transitions, interactions
+ - Responsive - functionally cross-device supported css/js, but needs device testing, more responsive styling.
+ - Clean up html structure, css utility usage - fast and loose with utilities inline vs in modules toward the end, nested `<section>` elements
  - Accessibility aria attrs, also helps in test/experiment element selection
  - Store strings in consts for consistency and easier translation/localization (eventually)
+ - Favicon, device icons, page metadata
 
 ### Prod: Analytics/Experimentation/Feature Flagging
 Simple to begin with. I like Posthog because it covers web analytics, product analytics, CDP/event pipelines, warehouse, feature flagging, experiments all with significant cost savings over other common options, and will take a while to grow out of.
