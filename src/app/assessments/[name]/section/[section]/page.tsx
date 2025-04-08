@@ -20,9 +20,10 @@ export async function generateStaticParams() {
     }
     if (screenerSections) {
       const sections = screenerSections.map((_, idx) => {
+        const section = (idx + 1).toString()
         return {
           name,
-          section: idx.toString(),
+          section,
         }
       })
       // @ts-expect-error TODO: ran out of time
@@ -30,6 +31,8 @@ export async function generateStaticParams() {
     }
     
   }, [])
+
+  console.log('params: ', params)
   
   return params
 }
