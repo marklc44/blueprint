@@ -16,7 +16,7 @@ Eventually use the homepage to login or index and navigate multiple screeners.
 The exercise is to create a full stack application that presents a user with a mental health diagnostic screening questionnaire to help determine the severity of symptoms they may be experiencing, and aid a trained therapist in creating a treatment plan. Using questions categorized by domain along with domain scoring rules, the questionnaire response is converted to 0 or more evidence-based Level-2 assessments.
 
 ## Solution
-*Terminology:* I'm using the term Screener to be the questionnaire with one more sections. An assessment, as I understand it, is the code or acronym for a grouping of symptoms, and is the objective of the Screener, but not necessarily the questionnaire itself.
+*Terminology:* I'm using the term Screener to be the questionnaire with one or more sections. An assessment, as I understand it, is the code or acronym for a grouping of symptoms, and is the objective of the Screener, but not necessarily the questionnaire itself.
 
 The application uses a SQLite/LibSQL database hosted on Turso managed hosting with the "serverless" API layer built with Prisma ORM, one API route and Next.js server actions. The frontend is built on Next.js app routing with multiple dynamic route params, React, and hosted on Vercel. The application is written in TypeScript, using Tailwind4 for styling and Jest for unit testing. Coded in Cursor with free plan code completion and used Chatgpt, Gemini, Anthropic and Graphviz for research and diagrams.
 
