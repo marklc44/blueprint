@@ -50,11 +50,11 @@ Prisma makes it very fast to design a schema, connect to local and external data
 - `storeScreenerResponse` - store answers in the db. At some point, would want to relate this to a therapist/company and a user filling out the response. This is the only endpoint with an API route because we access it from the client. It is possible to do this as a server action on form submission as well, but the results are currently stored and displayed without a route change in the client.
 - `getDomains` - get domain scoring rules and assessment mapping for calculating results.
 
-### Solution: Business logic/controllers
+### Solution: Business logic/actions/controllers/utils
 - `generateStaticParams` - where we transform the result of `getAllScreeners` to page params `{ name, section }` to build routes
-- `getScreenerPage` - Uses `getScreenerByName` to get a single screener and `transformScreener` to transform it match the JSON object structure with added question domain mapping. As above, the structure of the object is slightly different from the example as domain is included with each question rather than making another call or returning a separate object.
+- `getScreenerPage` - Uses `getScreenerByName` to get a single screener and the `transformScreener` utility to transform it match the JSON object structure with added question domain mapping. As above, the structure of the object is slightly different from the example as domain is included with each question rather than making another call or returning a separate object.
 - `storeScreenerResponse` - Stores the response to the screener. Additional util for calculating the results from domain and answers used in the client.
-- `calculateScores` and `calculateAssessments` - generate the list of assessments to display to the user, modular for unit testing
+- `calculateScores` and `calculateAssessments` - utilities to generate the list of assessments to display to the user, modular for unit testing
 
 ### Solution: Testing
  - Using Jest for unit tests. Could use Vitest, but can cause issues with Vercel Analytics if not configured correctly.
@@ -78,6 +78,9 @@ Multistep form client component using React and simple formData state management
  - Form Component - The form is a client component because it is interactive on the client using effects and react state to navigate and submit results. The form component handles the state, field transitions and submission. Submission is handled via ajax to showcase my ability to do that and to produce interactivity on the page, but could be done with a form action and page change to a results page. Form is controlled
  - Question Component - the field component is a reusable presentation for questions that behaves as the form component tells it to.
  - Standard Options Component - displays the options for this field type. In the real world, there might be different field types, so could render different Options components based on screener type.
+
+ #### Slider/Slide
+ Wraps the questions in basic slider/carousel functionality.
 
 #### Progress Bar Component
 From the total number of fields and the array index of each field, calculate progress (in the form component) and pass to the progress bar to update its inner length.
