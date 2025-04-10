@@ -12,7 +12,8 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("libsql://dev-marklc44.aws-us-west-2.turso.io")
+  // url      = "file:./dev.db"
 }
 
 model Screener {
