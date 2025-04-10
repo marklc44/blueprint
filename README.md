@@ -3,6 +3,7 @@
  - Position: Software Engineer (Growth)
  - Github: https://github.com/marklc44
  - Site: https://markcentoni.com
+ - Email: [marklc44@gmail.com](mailto:marklc44@gmail.com)
 
 Application repo: https://github.com/marklc44/blueprint
 Application demo: https://blueprint-mark-centoni.vercel.app
@@ -17,7 +18,7 @@ The exercise is to create a full stack application that presents a user with a m
 ## Solution
 *Terminology:* I'm using the term Screener to be the questionnaire with one more sections. An assessment, as I understand it, is the code or acronym for a grouping of symptoms, and is the objective of the Screener, but not necessarily the questionnaire itself.
 
-The application uses a SQLite/LibSQL database hosted on Turso managed hosting with the "serverless" API layer built with Prisma ORM, one API route and Next.js server actions. The frontend is built on Next.js app routing with multiple dynamic route params, React, and hosted on Vercel. The application is written in TypeScript, using Tailwind4 for styling and Jest for unit testing.
+The application uses a SQLite/LibSQL database hosted on Turso managed hosting with the "serverless" API layer built with Prisma ORM, one API route and Next.js server actions. The frontend is built on Next.js app routing with multiple dynamic route params, React, and hosted on Vercel. The application is written in TypeScript, using Tailwind4 for styling and Jest for unit testing. Coded in Cursor with free plan code completion and used Chatgpt, Gemini, Anthropic and Graphviz for research and diagrams.
 
 The repo on Github has two branches, main and develop, that align with Vercel production and preview environments respectively. Minimal unit testing is done with Jest, and Github actions could be included to run prebuild unit tests, but are not here.
 
@@ -33,6 +34,8 @@ I used a relational SQLite database with 7 tables. The data could lend itself to
  - Domain - one domain scoring rule with Assessment result and score threshold, 1 domain to many questions
  - ScreenerResponse - answers to screener questions, many screener responses to 1 ScreenerSection
  - Answer - answer to a single question, many answers to 1 ScreenerResponse
+
+ ![DB Diagram](public/db-diagram.png)
 
 #### ORM: Prisma
 Prisma makes it very fast to design a schema, connect to local and external databases, create and run migrations in multiple environments, is easy to understand and maintain, and provides some guardrails against common antipatterns
@@ -101,6 +104,7 @@ Get eng and cross-functional team input. It's important to incorporate other ide
  - API/UX - add suspense with fallback if important data cannot be added in UI (i.e. if dynamically loaded Screener can't be generated, provide a link to home or try again, etc.)
  - Multiple db envs to align with app envs (dev, test, prod/main)
  - Better migration scripts - Prisma migration/push scripts don't work OTB with Turso, so using their CLI. Or migrate to a service like PlanetScale (not free).
+ - Add an integer index to QuestionsOnScreenerIndex to ensure order/allow reordering
 
 ### Prod: Testing
  - Unit test all utilities and API. Current coverage is minimal. Hook into Github actions for build tests.
