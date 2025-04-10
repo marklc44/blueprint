@@ -5,8 +5,8 @@
  - Site: https://markcentoni.com
 
 Application repo: https://github.com/marklc44/blueprint
-Application demo: https://blueprint-tau-steel.vercel.app
-There's a redirect that will take you directly to the single screener page: https://blueprint-tau-steel.vercel.app/assessments/bpds/section/1
+Application demo: https://blueprint-mark-centoni.vercel.app
+There's a redirect that will take you directly to the single screener page: https://blueprint-mark-centoni.vercel.app/assessments/bpds/section/1
 Eventually use the homepage to login or index and navigate multiple screeners.
 
 ---
@@ -51,7 +51,7 @@ Prisma makes it very fast to design a schema, connect to local and external data
 - `generateStaticParams` - where we transform the result of `getAllScreeners` to page params `{ name, section }` to build routes
 - `getScreenerPage` - Uses `getScreenerByName` to get a single screener and `transformScreener` to transform it match the JSON object structure with added question domain mapping. As above, the structure of the object is slightly different from the example as domain is included with each question rather than making another call or returning a separate object.
 - `storeScreenerResponse` - Stores the response to the screener. Additional util for calculating the results from domain and answers used in the client.
-- `calculateScores` and `calculateAssessments` - generate the list of assessments to display to the user
+- `calculateScores` and `calculateAssessments` - generate the list of assessments to display to the user, modular for unit testing
 
 ### Solution: Testing
  - Using Jest for unit tests. Could use Vitest, but can cause issues with Vercel Analytics if not configured correctly.
@@ -68,19 +68,19 @@ Prisma makes it very fast to design a schema, connect to local and external data
 Uses Tailwind4 mostly in CSS modules. Tailwind4 is new, with breaking changes and this was my first brush with it. It has lots of perf improvements and seems to reduce css size with CSS modules. Still investigating. For me, CSS modules make Tailwind more readable and maintainable, especially for responsive breakpoints. No external component library.
 
 #### Assessments Page Component
-Async server component that takes routing params, fetches a single screener, the approriate screener section, displays screener meta data and passes question data to the form.
+Async server component that takes routing params, fetches a single screener, the approriate screener section, displays screener meta data and passes question data to the form. Posthog tracking added for analytics, wrapping the root layout with a Posthog provider with suspense so child server components are not forced to render on the client, per Posthog docs.
 
 #### Form, Question and Options Components
-Multistep form client component using React and `react-hook-form` to simplify form field state management and potential validation. Each question is revealed via transition like a carousel. 
- - Form Component - The form is a client component because it is interactive on the client using effects and react state to navigate and submit results. The form component handles the state, field transitions and submission. Submission is handled via ajax to showcase my ability to do that, but could be done with a form action and page change to a results page. Form is uncontrolled
- - Question Component - the field component is a reusable presentation for questions that behaves as the form component tells it to. It contains a hidden number field to record results so the form data can be submitted via action. 
+Multistep form client component using React and simple formData state management. Each question is revealed via transition like a carousel. 
+ - Form Component - The form is a client component because it is interactive on the client using effects and react state to navigate and submit results. The form component handles the state, field transitions and submission. Submission is handled via ajax to showcase my ability to do that and to produce interactivity on the page, but could be done with a form action and page change to a results page. Form is controlled
+ - Question Component - the field component is a reusable presentation for questions that behaves as the form component tells it to.
  - Standard Options Component - displays the options for this field type. In the real world, there might be different field types, so could render different Options components based on screener type.
 
 #### Progress Bar Component
-From the total number of fields and the array index of each field (array index is a safe order because field order is included in the screener JSON), calculate progress (in the form component) and pass to the progress bar to update its inner length.
+From the total number of fields and the array index of each field, calculate progress (in the form component) and pass to the progress bar to update its inner length.
 
 #### Results Component
-After answers are stored and assessment is calculated, display the results in a dialog overlaid on the page.
+After answers are stored and assessment is calculated, display the results in a dialog overlaid on the page. Shows a success or error message for the store results call.
 
 ## To be production ready
 Get eng and cross-functional team input. It's important to incorporate other ideas and build a prod app in a way the team can be productive. I'm assuming this app is going to part of or used in conjunction with other product offerings.
